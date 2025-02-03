@@ -41,12 +41,21 @@ export const useToDo = defineStore('todo-Store', () => {
         }
     }
 
+    async function setToDoDone(id) {
+        const todo = todos.value.find(todo => todo.id === id);
+        if (todo) {
+            todo.completed = true;
+            await http.put(`${endPoint}/${id}`, { ...todo, completed: true });
+        }
+    }
+
     return {
         todos,
         loadTodos,
         addTodo,
         changeToDo,
         setToDo,
-        deleteToDo
+        deleteToDo,
+        setToDoDone
     };
 });

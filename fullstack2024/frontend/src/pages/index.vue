@@ -2,16 +2,17 @@
   <BaseLayout>
     <div class="todo-container">
       <h1>Teendők</h1>
-      <input v-model="newTodo.title" placeholder="Cím" class="todo-input"/>
-      <input v-model="newTodo.description" placeholder="Leírás" @keyup.enter="handleAddTodo" class="todo-input"/>
+      <input v-model="newTodo.title" placeholder="Cím" class="todo-input" />
+      <input v-model="newTodo.description" placeholder="Leírás" @keyup.enter="handleAddTodo" class="todo-input" />
       <button @click="handleAddTodo">Hozzáadás</button>
 
       <ul>
-        <li v-for="todo in todos" :key="todo.id">
+        <li v-for="todo in todos" :key="todo.id" :class="{ completed: todo.completed }">
           <div v-if="editingTodo !== todo.id">
             <strong>{{ todo.title }}</strong>
             <p>{{ todo.description }}</p>
             <p>{{ todo.id }}</p>
+            <button @click="handleComplete(todo.id)">Kész</button>
             <button @click="startEdit(todo)">Szerkesztés</button>
             <button @click="handleDelete(todo.id)">Törlés</button>
           </div>
@@ -52,8 +53,8 @@ export default {
     ...mapState(useToDo, ['todos'])
   },
   methods: {
-    ...mapActions(useToDo, ['loadTodos', 'addTodo', 'changeToDo', 'deleteToDo']),
-    
+    ...mapActions(useToDo, ['loadTodos', 'addTodo', 'changeToDo', 'deleteToDo', 'setToDoDone']),
+
     async handleAddTodo() {
       if (this.newTodo.title.trim() && this.newTodo.description.trim()) {
         await this.addTodo({ title: this.newTodo.title, description: this.newTodo.description });
@@ -66,6 +67,10 @@ export default {
     async handleDelete(id) {
       await this.deleteToDo(id);
       await this.loadTodos();
+    },
+
+    async handleComplete(id) {
+      await this.setToDoDone(id);
     },
 
     startEdit(todo) {
@@ -101,6 +106,7 @@ export default {
   background: darkgreen;
   border-radius: 8px;
 }
+
 .todo-input {
   margin-right: 10px;
   padding: 5px;
@@ -108,18 +114,28 @@ export default {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+
 button {
   padding: 5px 10px;
   cursor: pointer;
 }
+
 ul {
   list-style: none;
   padding: 0;
 }
+
 li {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-top: 10px;
 }
+
+.completed {
+  text-decoration: line-through;
+  color: gray;
+  opacity: 0.7;
+}
+
 </style>

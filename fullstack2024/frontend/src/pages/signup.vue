@@ -4,18 +4,21 @@ import { http } from '../utils/http.mjs'
 
 const email = ref('');
 const password = ref('');
+const name = ref('');
 
 function submit() {
-  http.post('http://backend.vm1.test/register', {
+  http.post('/register', {
+    name: name.value,
     email: email.value,
     password: password.value,
-  })
+  });
 }
 </script>
 
 <template>
   <div class="flex flex-col p-4">
-    <input v-model="email" placeholder="Your email" type="email"/>
+    <input v-model="name" placeholder="Your name" type="text" />
+    <input v-model="email" placeholder="Your email" type="email" />
     <input
       v-model="password"
       placeholder="Your password"
@@ -26,5 +29,4 @@ function submit() {
       Sign up
     </button>
   </div>
-
 </template>

@@ -6,7 +6,7 @@ const email = ref('');
 const password = ref('');
 
 function submit() {
-  http.post('/http://backend.vm1.test/login', {
+  http.post('/login', {
     email: email.value,
     password: password.value,
   })

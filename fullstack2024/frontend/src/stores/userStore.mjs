@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { http } from '../path/to/your/axios/configuration';
+import { http } from '../utils/http.mjs';
 
 export const useUserStore = defineStore('user', () => {
     const user = ref(null);
@@ -24,7 +24,16 @@ export const useUserStore = defineStore('user', () => {
         user.value = response.data;
     };
 
+    const logout = async () => {
+        try {
+            await http.post('/logout');
+            user.value = null;  
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    };
+
     const isLoggedIn = computed(() => !!user.value);
 
-    return { user, loadUser, signup, login, isLoggedIn };
+    return { user, loadUser, signup, login, logout, isLoggedIn };
 });
